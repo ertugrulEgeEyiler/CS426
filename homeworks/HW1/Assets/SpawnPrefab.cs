@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateObject : MonoBehaviour
+public class SpawnPrefab : MonoBehaviour
 {
     public GameObject prefab;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -12,5 +13,5 @@ public class CreateObject : MonoBehaviour
             Instantiate(prefab, new Vector3(0, 10, 0), Quaternion.identity);
         }
     }
-
 }
+
