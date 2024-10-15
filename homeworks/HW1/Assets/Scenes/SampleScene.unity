@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 154342014}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Player
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -807,11 +807,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 617093447543053680, guid: 35a5dbc21081b15439be8a88831a1bae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.49
+      value: 2.82
       objectReference: {fileID: 0}
     - target: {fileID: 617093447543053680, guid: 35a5dbc21081b15439be8a88831a1bae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.36
+      value: -2.22
       objectReference: {fileID: 0}
     - target: {fileID: 617093447543053680, guid: 35a5dbc21081b15439be8a88831a1bae, type: 3}
       propertyPath: m_LocalRotation.w
