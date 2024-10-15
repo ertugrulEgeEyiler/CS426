@@ -14,13 +14,13 @@ public class MoveObject : MonoBehaviour
     void Update()
     {
         if (Input.GetKey(KeyCode.W))
-            rb.AddForce(Vector3.forward);
-        if (Input.GetKey(KeyCode.S))
-            rb.AddForce(Vector3.back);
-        if (Input.GetKey(KeyCode.A))
             rb.AddForce(Vector3.left);
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.S))
             rb.AddForce(Vector3.right);
+        if (Input.GetKey(KeyCode.A))
+            rb.AddForce(Vector3.back);
+        if (Input.GetKey(KeyCode.D))
+            rb.AddForce(Vector3.forward);
     }
 }
 
