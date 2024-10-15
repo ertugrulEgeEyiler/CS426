@@ -6,7 +6,7 @@ public class PlaySoundOnCollision : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "GameController")
         {
             audioSource.Play();
         }
