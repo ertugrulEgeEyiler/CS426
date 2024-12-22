@@ -21,9 +21,9 @@ public class MouseLook : MonoBehaviour
 
         // Yukarı-aşağı bakışı kontrol et (X ekseni)
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -45f, 45f); // Yukarı-aşağı sınırlandırma
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Yukarı-aşağı sınırlandırma
         yRotation -= mouseX;
-        yRotation = Mathf.Clamp(yRotation, -45f,45f);
+        yRotation = Mathf.Clamp(yRotation, -90f,90f);
         // Kameranın yukarı-aşağı hareketi
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
 

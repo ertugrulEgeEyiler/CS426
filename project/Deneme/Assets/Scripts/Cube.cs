@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    public CubeSpawner spawner;
-
-    void OnMouseDown()
+    void Start()
     {
-        spawner.OnCubeDestroyed(gameObject);
+        // CubeSpawner örneğine erişim
+        var spawner = CubeSpawner.Instance;
+        Debug.Log($"Spawner mevcut, materyal sayısı: {spawner.cubeMaterials.Length}");
     }
 }

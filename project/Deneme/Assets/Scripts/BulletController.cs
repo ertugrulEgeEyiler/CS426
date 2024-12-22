@@ -2,30 +2,23 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    public GameObject explosionEffect; // (Opsiyonel) Patlama efekti prefab'ı
-    public float destroyAfterSeconds = 2f; // Çarpmadan sonra yok olma süresi
+    public float destroyAfterSeconds = 3f; // Çarpmadan sonra yok olma süresi
 
-    void Start()
+    void Awake()
     {
-        // Kurşunu 2 saniye sonra yok et
+        // Kurşunu belli bir süre sonra yok et
         Destroy(gameObject, destroyAfterSeconds);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // Çarptığı obje bir "Cube" ise, kutuyu yok et
+        // Eğer çarpılan obje "Cube" ise CubeSpawner'ı tetikle
         if (collision.gameObject.CompareTag("Cube"))
         {
-            // Eğer bir patlama efekti varsa, oluştur
-            if (explosionEffect != null)
-            {
-                Instantiate(explosionEffect, collision.transform.position, Quaternion.identity);
-            }
+            CubeSpawner.Instance.OnCubeDestroyed(collision.gameObject);
 
-            Destroy(collision.gameObject); // Kutuyu yok et
+            // Kurşunu yok et
+            Destroy(gameObject);
         }
-
-        // Çarpmadan sonra kurşunu yok et
-        Destroy(gameObject);
     }
 }
