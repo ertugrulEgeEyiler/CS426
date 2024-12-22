@@ -14,7 +14,7 @@ public class CubeSpawner : MonoBehaviour
     public int maxRows = 5; // Her sütundaki maksimum küp sayısı
     public Text scoreText; // Skor metni için UI öğesi
     public Text timerText; // Süreyi göstermek için UI öğesi
-    public float gameDuration = 120f; // Oyun süresi (2 dakika)
+    public float gameDuration = 60f; // Oyun süresi (2 dakika)
 
     private Dictionary<float, List<GameObject>> columns = new Dictionary<float, List<GameObject>>();
     private Dictionary<string, int> materialNumbers = new Dictionary<string, int>();
@@ -109,7 +109,7 @@ public class CubeSpawner : MonoBehaviour
         // Eğer 6 ya da daha fazla küp yok edildiyse süreye 10 saniye ekle
         if (destroyedCount >= 6)
         {
-            AddTime(10f);
+            AddTime(5f);
         }
     }
 
