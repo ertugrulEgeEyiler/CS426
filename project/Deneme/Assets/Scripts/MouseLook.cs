@@ -6,7 +6,7 @@ public class MouseLook : MonoBehaviour
     public Transform PlayerBody; // Oyuncunun vücudu (PlayerBody)
 
     private float xRotation = 0f; // Yukarı-aşağı rotasyon için
-
+    private float yRotation = 0f;
     void Start()
     {
         // Fareyi ekranın merkezine kilitle
@@ -21,10 +21,11 @@ public class MouseLook : MonoBehaviour
 
         // Yukarı-aşağı bakışı kontrol et (X ekseni)
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Yukarı-aşağı sınırlandırma
-
+        xRotation = Mathf.Clamp(xRotation, -45f, 45f); // Yukarı-aşağı sınırlandırma
+        yRotation -= mouseX;
+        yRotation = Mathf.Clamp(yRotation, -45f,45f);
         // Kameranın yukarı-aşağı hareketi
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
 
         // Sağa-sola dönüşü PlayerBody'ye uygula (Y ekseni)
         PlayerBody.Rotate(Vector3.up * mouseX);
