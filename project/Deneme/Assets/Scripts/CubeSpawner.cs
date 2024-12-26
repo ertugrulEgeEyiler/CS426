@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // UI Text sınıfı için gerekli
+using UnityEngine.UI;
+using System.IO;
+using UnityEngine.SceneManagement;
 
 public class CubeSpawner : MonoBehaviour
 {
     public static CubeSpawner Instance;
 
-    public GameObject cubePrefab; // Küp prefab'ı
-    public Material[] cubeMaterials; // Rastgele materyaller
-    public float cubeSpacingY = 1f; // Küpler arası dikey boşluk
-    public float fixedZ = -12.43f; // Sabit Z pozisyonu
-    public int maxRows = 5; // Her sütundaki maksimum küp sayısı
-    public Text scoreText; // Skor metni için UI öğesi
-    public Text timerText; // Süreyi göstermek için UI öğesi
-    public float gameDuration = 60f; // Oyun süresi (2 dakika)
+    public GameObject cubePrefab;
+    public Material[] cubeMaterials;
+    public float cubeSpacingY = 1f;
+    public float fixedZ = -12.43f;
+    public int maxRows = 5;
+    public Text scoreText;
+    public Text timerText;
+    public float gameDuration = 60f;
 
     private Dictionary<float, List<GameObject>> columns = new Dictionary<float, List<GameObject>>();
     private Dictionary<string, int> materialNumbers = new Dictionary<string, int>();
-    private int totalScore = 0; // Toplam puan
-    private float remainingTime; // Kalan süre
+    private int totalScore = 0;
+    private float remainingTime;
 
     void Awake()
     {
@@ -37,7 +39,7 @@ public class CubeSpawner : MonoBehaviour
     {
         AssignMaterialNumbers();
         SpawnInitialCubes();
-        remainingTime = gameDuration; // Süreyi başlat
+        remainingTime = gameDuration;
         UpdateScoreUI();
         UpdateTimerUI();
         StartCoroutine(TimerCountdown());
@@ -87,9 +89,9 @@ public class CubeSpawner : MonoBehaviour
 
     IEnumerator DestroyConnectedCubes(GameObject startCube)
     {
-        HashSet<GameObject> connectedCubes = GetConnectedCubes(startCube); // Bağlı tüm küpleri bul
+        HashSet<GameObject> connectedCubes = GetConnectedCubes(startCube);
 
-        int destroyedCount = connectedCubes.Count; // Anlık yok edilen küp sayısını al
+        int destroyedCount = connectedCubes.Count;
 
         foreach (GameObject cube in connectedCubes)
         {
@@ -101,12 +103,10 @@ public class CubeSpawner : MonoBehaviour
             RemoveCubeFromColumn(xPosition, cube);
         }
 
-        // Yok edilen toplam küp sayısına göre puanı hesapla
         int score = CalculateScore(destroyedCount);
         totalScore += score;
-        UpdateScoreUI(); // UI'daki skoru güncelle
+        UpdateScoreUI(); 
 
-        // Eğer 6 ya da daha fazla küp yok edildiyse süreye 10 saniye ekle
         if (destroyedCount >= 6)
         {
             AddTime(5f);
@@ -173,8 +173,8 @@ public class CubeSpawner : MonoBehaviour
                 string otherMaterialName = other.GetComponent<Renderer>().material.name;
 
                 if (otherMaterialName == cubeMaterialName &&
-                    ((Mathf.Abs(x - otherX) < 0.1f && Mathf.Abs(y - otherY) < cubeSpacingY + 0.1f) || // Üst-alt
-                     (Mathf.Abs(y - otherY) < 0.1f && Mathf.Abs(x - otherX) < 1.1f))) // Sağ-sol
+                    ((Mathf.Abs(x - otherX) < 0.1f && Mathf.Abs(y - otherY) < cubeSpacingY + 0.1f) || 
+                     (Mathf.Abs(y - otherY) < 0.1f && Mathf.Abs(x - otherX) < 1.1f))) 
                 {
                     neighbors.Add(other);
                 }
@@ -252,7 +252,6 @@ public class CubeSpawner : MonoBehaviour
             UpdateTimerUI();
         }
 
-        // Süre bittiğinde oyun sona erer
         Debug.Log("Game Over! Final Score: " + totalScore);
         EndGame();
     }
@@ -260,13 +259,42 @@ public class CubeSpawner : MonoBehaviour
     void AddTime(float timeToAdd)
     {
         remainingTime += timeToAdd;
-        UpdateTimerUI(); // Eklenen süreyi UI'da güncelle
+        UpdateTimerUI();
     }
 
     void EndGame()
+{
+    SaveScore();
+
+    EndGameManager();
+}
+
+void SaveScore()
+{
+    string filePath = Application.dataPath + "/Scripts/final_score.txt";
+
+    int maxScore = totalScore;
+
+    if (File.Exists(filePath))
     {
-        // Oyun bitişi için işlemler
-        Debug.Log("Game Over!");
-        // Buraya oyun bitiş ekranı veya tekrar başlatma mekanizması eklenebilir
+        string[] lines = File.ReadAllLines(filePath);
+        if (lines.Length > 1 && int.TryParse(lines[1].Split(':')[1].Trim(), out int savedMaxScore))
+        {
+            maxScore = Mathf.Max(maxScore, savedMaxScore);
+        }
     }
+
+    string[] newLines = {
+        "Final Score: " + totalScore,
+        "Max Score: " + maxScore
+    };
+
+    File.WriteAllLines(filePath, newLines);
+}
+
+    public void EndGameManager(){
+        SceneManager.LoadScene(2);
+        Cursor.lockState = CursorLockMode.None;
+    }
+
 }
