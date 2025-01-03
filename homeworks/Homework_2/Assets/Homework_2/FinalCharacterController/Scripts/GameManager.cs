@@ -4,27 +4,35 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private bool hasKey = false; // Boolean to track if the player has collected the key
+    public static GameManager Instance; // Singleton tasarımı
 
-    // This method is triggered when a collision occurs
-    private void OnCollisionEnter(Collision collision)
+    private int keyCount = 0; // Toplanan anahtar sayısı
+
+    private void Awake()
     {
-        // Check if the object that collided has the "Player" tag
-        if (collision.gameObject.CompareTag("Player"))
+        // Singleton: Tek bir GameManager örneği olmasını sağlar
+        if (Instance == null)
         {
-            // Check if the collided object has the "Key" or "Rust_Key" tag
-            if (collision.rigidbody.CompareTag("Key") || collision.rigidbody.CompareTag("Rust_Key"))
-            {
-                hasKey = true; // Set the boolean to true
-                Destroy(collision.rigidbody.gameObject); // Destroy the key object
-                Debug.Log("Key or Rust_Key collected and destroyed!"); // Log for debugging purposes
-            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Sahne değişimlerinde yok edilmez
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
-    // You can use this method to check if the player has the key
-    public bool HasKey()
+    // Anahtar toplama işlemi
+    public void CollectKey(GameObject keyObject)
     {
-        return hasKey;
+        keyCount++; // Anahtar sayısını artır
+        Debug.Log("Anahtar toplandı! Toplam Anahtar: " + keyCount);
+        Destroy(keyObject); // Anahtarı yok et
+    }
+
+    // Anahtar sayısını kontrol eden bir fonksiyon
+    public int GetKeyCount()
+    {
+        return keyCount;
     }
 }

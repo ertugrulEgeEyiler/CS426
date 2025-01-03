@@ -123,5 +123,18 @@ namespace Homework2.FinalCharacterController
             Vector3 lateralVelocity = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z);
             return lateralVelocity.magnitude > movingThreshold;
         }
+        private void OnTriggerEnter(Collider other)
+        {
+            Debug.Log("Çarpışma oldu: " + other.name); // Çarpışan nesne adını yazdır
+            if (other.CompareTag("Key"))
+                {
+                    Debug.Log("Anahtar toplandı!");
+                    GameManager.Instance.CollectKey(other.gameObject);
+                }
+            else
+            {
+                Debug.Log("Tag eşleşmiyor: " + other.tag);
+            }
+        }
     }
 }
