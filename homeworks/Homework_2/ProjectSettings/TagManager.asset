@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Key
+  - Door
+  - Spear
+  - Blade
+  - NPC
   layers:
   - Default
   - TransparentFX

@@ -72,7 +72,6 @@ namespace Homework2.FinalCharacterController
 
         private void HandleLateralMovement()
         {
-            // Create quick references for current state
             bool isSprinting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
 
             float lateralAcceleration = isSprinting ? sprintAcceleration : runAcceleration;
@@ -85,12 +84,10 @@ namespace Homework2.FinalCharacterController
             Vector3 movementDelta = movementDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = _currentVelocity + movementDelta;
 
-            // Add drag to player
             Vector3 currentDrag = newVelocity.normalized * drag * Time.deltaTime;
             newVelocity = (newVelocity.magnitude > drag * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
             newVelocity = Vector3.ClampMagnitude(newVelocity, clampLateralMagnitude);
 
-            // Apply gravity
             if (!_characterController.isGrounded)
             {
                 newVelocity.y += Physics.gravity.y * Time.deltaTime;
@@ -100,10 +97,8 @@ namespace Homework2.FinalCharacterController
                 newVelocity.y = 0f;
             }
 
-            // Update velocity
             _currentVelocity = newVelocity;
 
-            // Move character
             _characterController.Move(_currentVelocity * Time.deltaTime);
         }
 
@@ -123,17 +118,54 @@ namespace Homework2.FinalCharacterController
             Vector3 lateralVelocity = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z);
             return lateralVelocity.magnitude > movingThreshold;
         }
+        private void OnCollisionEnter(Collision collision)
+        {
+            Debug.Log("Collision detected with: " + collision.gameObject.name + " (Tag: " + collision.gameObject.tag + ")");
+
+            if (collision.gameObject.CompareTag("NPC"))
+            {
+                Debug.Log("Collided with NPC! Health decreased by 100.");
+                GameManager.Instance.DecreaseHealth(100);
+            }
+        }
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Çarpışma oldu: " + other.name); // Çarpışan nesne adını yazdır
+            Debug.Log("Collision detected with: " + other.name + " (Tag: " + other.tag + ")");
+
             if (other.CompareTag("Key"))
+            {
+                Debug.Log("Pushing the key...");
+                Rigidbody keyRigidbody = other.GetComponent<Rigidbody>();
+
+                if (keyRigidbody != null)
                 {
-                    Debug.Log("Anahtar toplandı!");
-                    GameManager.Instance.CollectKey(other.gameObject);
+                    Vector3 pushDirection = (other.transform.position - transform.position).normalized;
+                    keyRigidbody.AddForce(pushDirection * 5f, ForceMode.Impulse); // Adjust the push force as needed
                 }
+            }
+            else if (other.CompareTag("Door"))
+            {
+                Debug.Log("Attempting to open door...");
+                GameManager.Instance.OpenDoor();
+            }
+            else if (other.CompareTag("Spear"))
+            {
+                Debug.Log("Touched a spear! Decreasing health by 20...");
+                GameManager.Instance.DecreaseHealth(20);
+            }
+            else if (other.CompareTag("Blade"))
+            {
+                Debug.Log("Touched a blade! Decreasing health by 30...");
+                GameManager.Instance.DecreaseHealth(30);
+            }
+            else if (other.CompareTag("NPC"))
+            {
+                Debug.Log("Collided with an NPC! Health decreased by 100.");
+                GameManager.Instance.DecreaseHealth(100);
+            }
             else
             {
-                Debug.Log("Tag eşleşmiyor: " + other.tag);
+                Debug.Log("Unrecognized tag: " + other.tag);
             }
         }
     }
