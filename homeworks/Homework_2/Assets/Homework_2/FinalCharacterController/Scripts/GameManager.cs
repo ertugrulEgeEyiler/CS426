@@ -5,11 +5,17 @@ using UnityEngine.SceneManagement; // For scene management
 
 public class GameManager : MonoBehaviour
 {
+    void Start()
+    {
+        Cursor.visible = false;
+        ResetGame(); // Oyuna başlarken tüm değerleri sıfırla
+    }
+
     public static GameManager Instance; // Singleton pattern
 
     [Header("Player Health")]
     public int playerHealth = 100; // Initial health
-    private bool isGameOver = false;
+    public bool isGameOver = false;
 
     private bool hasKey = false; // Player's key status
 
@@ -26,10 +32,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Oyunu sıfırlayan metot
+    public void ResetGame()
+    {
+        playerHealth = 100; // Oyuncunun sağlığını sıfırla
+        isGameOver = false; // Game Over durumunu sıfırla
+        hasKey = false; // Anahtar durumunu sıfırla
+        Debug.Log("Game reset. Player health set to 100.");
+    }
+
     // Decrease player health
     public void DecreaseHealth(int amount)
     {
-        if (isGameOver) return; // Prevent further damage after game over
+        if (isGameOver) return; // Game over durumunda hasar alınmaz
 
         playerHealth -= amount;
         Debug.Log("Player Health: " + playerHealth);
@@ -43,9 +58,12 @@ public class GameManager : MonoBehaviour
     // Handle game over logic
     private void GameOver()
     {
-        isGameOver = true;
-        Debug.Log("Game Over! Sending to Scene 1...");
-        SceneManager.LoadScene(1); // Load Scene 1
+        if (!isGameOver)
+        {
+            isGameOver = true;
+            Debug.Log("Game Over! Sending to Scene 1...");
+            SceneManager.LoadScene(1); // Load Scene 1
+        }
     }
 
     // Handle key collection
@@ -55,7 +73,7 @@ public class GameManager : MonoBehaviour
         {
             hasKey = true;
             Debug.Log("Key collected!");
-            Destroy(keyObject); // Destroy the key object
+            Destroy(keyObject); // Anahtarı yok et
         }
         else
         {
@@ -82,6 +100,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("You need a key to open the door!");
         }
     }
+
     public void EndGame()
     {
         if (!isGameOver)
@@ -92,4 +111,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Restart butonu ile oyun sıfırlama
+    public void RestartGame()
+    {
+        Debug.Log("Restarting game...");
+        ResetGame(); // Tüm değişkenleri sıfırla
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Şu anki sahneyi yeniden yükle
+    }
 }

@@ -8,6 +8,10 @@ namespace Homework2.FinalCharacterController
     [DefaultExecutionOrder(-1)]
     public class PlayerController : MonoBehaviour
     {
+        void Start()
+        {
+            Cursor.visible = false;
+        }
         [Header("Components")]
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Camera _playerCamera;
@@ -145,22 +149,18 @@ namespace Homework2.FinalCharacterController
             }
             else if (other.CompareTag("Door"))
             {
-                Debug.Log("Attempting to open door...");
                 GameManager.Instance.OpenDoor();
             }
             else if (other.CompareTag("Spear"))
             {
-                Debug.Log("Touched a spear! Decreasing health by 20...");
                 GameManager.Instance.DecreaseHealth(20);
             }
             else if (other.CompareTag("Blade"))
             {
-                Debug.Log("Touched a blade! Decreasing health by 30...");
                 GameManager.Instance.DecreaseHealth(30);
             }
             else if (other.CompareTag("NPC"))
             {
-                Debug.Log("Collided with an NPC! Health decreased by 100.");
                 GameManager.Instance.DecreaseHealth(100);
             }
             else

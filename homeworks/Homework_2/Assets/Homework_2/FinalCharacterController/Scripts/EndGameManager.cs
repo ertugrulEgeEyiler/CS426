@@ -5,10 +5,15 @@ using UnityEngine.SceneManagement; // For scene management
 
 public class EndGameManager : MonoBehaviour
 {
+    void Start()
+    {
+        Cursor.visible = true;
+    }
     // Function to restart the game and load Scene 0
     public void RestartGame()
     {
         Debug.Log("Restarting game...");
+        GameManager.Instance.RestartGame();
         SceneManager.LoadScene(0); // Load Scene 0 (assumed to be your main game scene)
     }
 
